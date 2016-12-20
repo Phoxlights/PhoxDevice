@@ -29,4 +29,7 @@ send_message:
 listen:
 	picocom --imap lfcrlf -e c -b 115200 /dev/ttyUSB$(DEVICE) 
 
-.PHONY: ota_deploy send_message listen
+erase_flash:
+	tools/esptool.py -p /dev/ttyUSB$(DEVICE) erase_flash
+
+.PHONY: send_message listen erase_flash
