@@ -325,7 +325,9 @@ void enterSyncMode(){
     otaOnEnd(&otaEnd);
     otaStart();
 
+#ifdef COMPONENT
     buttonOnTap(btn, sendRegistrationRequest);
+#endif
 
     flashSuccessStatusLight(status);
     setIdleStatusLight(status);
@@ -410,18 +412,16 @@ void setup(){
 
 #ifdef DEV_MODE
     Serial.println("DEV_MODE is on");
-    if(DEV_MODE){
-        if(!startSyncListeners()){
-            Serial.println("couldnt start sync mode listeners");
-        }
-        otaOnStart(&otaStarted);
-        otaOnProgress(&otaProgress);
-        otaOnError(&otaError);
-        otaOnEnd(&otaEnd);
-        otaStart();
-
-        buttonOnTap(btn, sendRegistrationRequest);
+    if(!startSyncListeners()){
+        Serial.println("couldnt start sync mode listeners");
     }
+    otaOnStart(&otaStarted);
+    otaOnProgress(&otaProgress);
+    otaOnError(&otaError);
+    otaOnEnd(&otaEnd);
+    otaStart();
+
+    buttonOnTap(btn, sendRegistrationRequest);
 #endif
 
     setIdleStatusLight(status);

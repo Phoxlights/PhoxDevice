@@ -4,3 +4,6 @@
 [submodule "libs/PhoxCore"]
 	path = libs/PhoxCore
 	url = https://github.com/Phoxlights/PhoxCore.git
+[submodule "libs/PhoxTools"]
+	path = libs/PhoxTools
+	url = https://github.com/Phoxlights/PhoxTools.git
