@@ -13,6 +13,7 @@
 
 #include "status.h"
 #include "deviceconfig.h"
+#include "webapp.h"
 
 // NOTE - DEV_MODE may enable security holes
 // so be sure it is off for production!
@@ -405,6 +406,12 @@ void setup(){
             networkAdvertise(config->hostname);
             break;
     }
+
+    // start the webapp server
+    if(!webAppBegin()){
+        Serial.println("probalo starting webapp server");
+    }
+    Serial.println("webapp server up");
 
     if(!startRunListeners()){
         Serial.println("couldnt start listening for events");
