@@ -49,6 +49,16 @@ Release checklist:
 * Make sure submodules are pinned to a release tag
 * *After* release, bump the version in `VERSION` and push to develop
 
+Troubleshootin'
+-----------
+This error may indicate that the user doesn't have permission to use /dev/tty
+
+    error: cannot access /dev/ttyUSB0
+    error: espcomm_open failed
+    error: espcomm_upload_mem failed
+
+Most like you need to add the user to the `dialout` group
+
 TODO
 ------------
 * Identity object for `who` command is all jacked :/
