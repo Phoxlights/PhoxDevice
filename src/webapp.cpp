@@ -14,31 +14,67 @@ static void serveApp(){
     server->send(200, "text/html", webAppHTML);
 }
 
+static int byteFromString(char * arg, byte * b){
+    int val;
+    int ok = sscanf(arg, "%d", &val);
+    if(!ok){
+        Serial.printf("Failed to convert '%s' to int\n", arg);
+        return 0;
+    }
+    *b = (byte)val;
+    return 1;
+}
+
+static int byteFromArg(char * argName, byte * b){
+    if(!server->hasArg(argName)){
+        Serial.printf("Missing arg '%s'\n", argName);
+        return 0;
+    }
+
+    if(server->arg(argName).length() > 3){
+        Serial.printf("Value '%s' for arg '%s' is of invalid length\n", server->arg("r").c_str(), argName);
+        return 0;
+    }
+
+    char str[3];
+    strcpy(str, server->arg(argName).c_str());
+    if(!byteFromString(str, b)){
+        Serial.printf("couldnt convert value '%s' for arg '%s' to byte\n", str, argName);
+        return 0;
+    }
+
+    return 1;
+}
+
 static void handleColor(){
-    if(server->args() < 1){
-        server->send(400, "text/plain", "please provide rgb color");
+    if(server->args() < 3){
+        server->send(400, "text/plain", "please provide r, g, and b values");
         return;
     }
 
     byte color[3];
-    bool found = false;
-    char message[100];
+    char message[40];
 
-	for(int i = 0; i < server->args(); i++){
-        if(server->argName(i) == "rgb"){
-            const char * colorStr = server->arg(i).c_str();
-            sprintf(message, "set color %s", colorStr);
-            found = true;
-            break; 
-        }
-	}
+    if(!server->hasArg("r") || !server->hasArg("g") || !server->hasArg("b")){
+        server->send(400, "text/plain", "please provide r, g, and b bro");
+        return;
+    }
 
-    if(!found){
-        server->send(400, "text/plain", "please provide rgb color");
+    if(!byteFromArg("r", &(color[0]))){
+        server->send(400, "text/plain", "failed to parse value for arg 'r'\n");
+        return;
+    }
+    if(!byteFromArg("g", &(color[1]))){
+        server->send(400, "text/plain", "failed to parse value for arg 'g'\n");
+        return;
+    }
+    if(!byteFromArg("b", &(color[2]))){
+        server->send(400, "text/plain", "failed to parse value for arg 'b'\n");
         return;
     }
 
     // TODO - set color on ledstrip
+    sprintf(message, "set r: %i, g: %i, b: %i", color[0], color[1], color[2]);
 
     server->send(200, "text/plain", message);
 }
