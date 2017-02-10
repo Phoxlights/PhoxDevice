@@ -7,7 +7,13 @@ static ESP8266WebServer * server;
 
 typedef struct WebAppState {
     ESP8266WebServer * server;
+    statefulCallback onReady;
+    void * onReadyState;
+    statefulCallback onColor;
+    void * onColorState;
 } WebAppState;
+
+WebAppState * webApp;
 
 static void serveApp(){
     // NOTE - webAppHTML comes from webapphtml.h
@@ -84,8 +90,14 @@ static void handleAnimation(){
 }
 
 static void handleReady(){
-    // TODO - set esp to custom preset
-    server->send(200, "text/plain", "ready");
+    if(webApp->onReady != NULL){
+        int ok = webApp->onReady(webApp->onReadyState);
+        if(ok){
+            server->send(200, "text/plain", "ready");
+            return;
+        }
+    }
+    server->send(500, "text/plain", "probalo");
 }
 
 static void handleNotFound() {
@@ -112,8 +124,8 @@ static void serverTick(void * s){
 
 int webAppBegin(){
     server = new ESP8266WebServer(80);
-    WebAppState * state = (WebAppState*)malloc(sizeof(WebAppState));
-    state->server = server;
+    webApp = (WebAppState*)malloc(sizeof(WebAppState));
+    webApp->server = server;
 
     // routes
     // html
@@ -126,7 +138,19 @@ int webAppBegin(){
     server->on("/api/v1/ready", handleReady);
 
     server->begin();
-    loopAttach(serverTick, 0, state);
+    loopAttach(serverTick, 0, webApp);
 
+    return 1;
+}
+
+int webAppOnReady(statefulCallback onReady, void * state){
+    webApp->onReady = onReady;
+    webApp->onReadyState = state;
+    return 1;
+}
+
+int webAppOnColor(statefulCallback onColor, void * state){
+    webApp->onColor = onColor;
+    webApp->onColorState = state;
     return 1;
 }

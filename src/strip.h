@@ -5,6 +5,6 @@
 #include <lightstrip.h>
 
 int setupLight(int pin, int numPx);
-int stripStartDefault();
+int stripLoadEditable();
 
 #endif

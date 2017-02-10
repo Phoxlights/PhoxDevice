@@ -240,6 +240,17 @@ void receiveRegistrationResponse(Event * e, Request * r){
 }
 #endif /* COMPONENT */
 
+typedef struct WebAppHandlerState {
+    bool nothing;
+} WebAppHandlerState;
+WebAppHandlerState webAppHandlerState;
+
+int handleWebAppReady(void * s){
+    WebAppHandlerState * state = (WebAppHandlerState*)s;
+    Serial.printf("loadin editable");
+    stripLoadEditable();
+}
+
 // events to listen for in run mode
 int startRunListeners(){
     int ok = eventListen(EVENT_VER, EVENT_PORT);
@@ -419,6 +430,7 @@ void setup(){
     if(!webAppBegin()){
         Serial.println("probalo starting webapp server");
     }
+    webAppOnReady(handleWebAppReady, (void*)&webAppHandlerState);
     Serial.println("webapp server up");
 
     if(!startRunListeners()){
