@@ -7,3 +7,6 @@
 [submodule "libs/PhoxTools"]
 	path = libs/PhoxTools
 	url = https://github.com/Phoxlights/PhoxTools.git
+[submodule "libs/PhoxAnimate"]
+	path = libs/PhoxAnimate
+	url = https://github.com/Phoxlights/PhoxAnimate.git

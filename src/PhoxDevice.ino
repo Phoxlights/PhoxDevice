@@ -14,6 +14,7 @@
 #include "status.h"
 #include "deviceconfig.h"
 #include "webapp.h"
+#include "strip.h"
 
 // NOTE - DEV_MODE may enable security holes
 // so be sure it is off for production!
@@ -44,6 +45,7 @@ DeviceConfig * config = getConfig();
 Identity * id = getIdentity();
 DigitalButton btn = buttonCreate(BUTTON_PIN, 50);
 IPAddress serverIP = IPAddress(SERVER_IP_UINT32);
+
 
 void otaStarted(){
     Serial.println("ota start");
@@ -365,6 +367,12 @@ void setup(){
     loadConfig();
     logConfig(config);
 
+    setMiscStatusLight(status);
+
+    if(!setupLight(STRIP_PIN, NUM_PX)){
+        asplode("couldnt create light strip or animator");
+    }
+
     // HACK - works around issue where this device
     // cannot make tcp connections to an esp which
     // is serving as an AP
@@ -431,7 +439,7 @@ void setup(){
     buttonOnTap(btn, sendRegistrationRequest);
 #endif
 
-    setIdleStatusLight(status);
+    statusLightStop(status);
 }
 
 void loop(){

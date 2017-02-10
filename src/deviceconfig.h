@@ -11,6 +11,8 @@
 #define STATUS_PIN 2
 // TODO - get BIN_VERSION from VERSION file
 #define BIN_VERSION 1
+#define STRIP_PIN 2
+#define NUM_PX 4
 
 // 192.168.4.1 17082560
 // 192.168.43.20 338405568
