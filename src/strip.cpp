@@ -73,6 +73,7 @@ int stripLoadEditable(){
     // NOTE - if a layer already exists at the specified index
     // it will be freed before the new one is added
     AnimatorLayer l = animatorLayerCreate(stripState.animator, stripState.numPx, 1, 0);
+    AnimatorKeyframe k1 = animatorKeyframeCreate(l, 30, bmp);
     return 1;
 }
 
