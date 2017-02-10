@@ -46,7 +46,7 @@ class EspAPI {
     }
 
     setColor(rgb){
-        let url = `${this.api}/color?c=${rgb.join(",")}`;
+        let url = `${this.api}/color?r=${rgb[0]}&g=${rgb[1]}&b=${rgb[2]}`;
         console.log(url);
         get(url, (err, response) => {
             if(err){

@@ -76,3 +76,9 @@ int stripLoadEditable(){
     return 1;
 }
 
+int stripSetColor(byte rgb[3]){
+    Bitmap * bmp = stripState.bmp;
+    byte rgba[] = {rgb[0], rgb[1], rgb[2], 255};
+    Bitmap_fill(bmp, rgba);
+    return 1;
+}

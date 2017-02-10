@@ -7,10 +7,8 @@ static ESP8266WebServer * server;
 
 typedef struct WebAppState {
     ESP8266WebServer * server;
-    statefulCallback onReady;
-    void * onReadyState;
-    statefulCallback onColor;
-    void * onColorState;
+    int (*onReady)();
+    int (*onColor)(byte rgb[3]);
 } WebAppState;
 
 WebAppState * webApp;
@@ -81,8 +79,16 @@ static void handleColor(){
 
     // TODO - set color on ledstrip
     sprintf(message, "set r: %i, g: %i, b: %i", color[0], color[1], color[2]);
+    Serial.printf(message);
 
-    server->send(200, "text/plain", message);
+    if(webApp->onColor != NULL){
+        int ok = webApp->onColor(color);
+        if(ok){
+            server->send(200, "text/plain", message);
+            return;
+        }
+    }
+    server->send(500, "text/plain", "probalo");
 }
 
 static void handleAnimation(){
@@ -91,7 +97,7 @@ static void handleAnimation(){
 
 static void handleReady(){
     if(webApp->onReady != NULL){
-        int ok = webApp->onReady(webApp->onReadyState);
+        int ok = webApp->onReady();
         if(ok){
             server->send(200, "text/plain", "ready");
             return;
@@ -143,14 +149,12 @@ int webAppBegin(){
     return 1;
 }
 
-int webAppOnReady(statefulCallback onReady, void * state){
+int webAppOnReady(int (*onReady)()){
     webApp->onReady = onReady;
-    webApp->onReadyState = state;
     return 1;
 }
 
-int webAppOnColor(statefulCallback onColor, void * state){
+int webAppOnColor(int (*onColor)(byte rgb[3])){
     webApp->onColor = onColor;
-    webApp->onColorState = state;
     return 1;
 }

@@ -6,5 +6,6 @@
 
 int setupLight(int pin, int numPx);
 int stripLoadEditable();
+int stripSetColor(byte rgb[3]);
 
 #endif

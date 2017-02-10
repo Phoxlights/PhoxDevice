@@ -240,15 +240,13 @@ void receiveRegistrationResponse(Event * e, Request * r){
 }
 #endif /* COMPONENT */
 
-typedef struct WebAppHandlerState {
-    bool nothing;
-} WebAppHandlerState;
-WebAppHandlerState webAppHandlerState;
-
-int handleWebAppReady(void * s){
-    WebAppHandlerState * state = (WebAppHandlerState*)s;
-    Serial.printf("loadin editable");
+int handleWebAppReady(){
     stripLoadEditable();
+    return 1;
+}
+int handleWebAppColor(byte rgb[3]){
+    stripSetColor(rgb);
+    return 1;
 }
 
 // events to listen for in run mode
@@ -430,7 +428,8 @@ void setup(){
     if(!webAppBegin()){
         Serial.println("probalo starting webapp server");
     }
-    webAppOnReady(handleWebAppReady, (void*)&webAppHandlerState);
+    webAppOnReady(handleWebAppReady);
+    webAppOnColor(handleWebAppColor);
     Serial.println("webapp server up");
 
     if(!startRunListeners()){

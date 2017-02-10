@@ -1,10 +1,10 @@
 #ifndef WEBAPP_H
 #define WEBAPP_H
 
-typedef int (*statefulCallback)(void * state);
+#include <Arduino.h>
 
 int webAppBegin();
-int webAppOnReady(statefulCallback onReady, void * state);
-int webAppOnColor(statefulCallback onColor, void * state);
+int webAppOnReady(int (*onReady)());
+int webAppOnColor(int (*onColor)(byte rgb[3]));
 
 #endif
